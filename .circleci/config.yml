@@ -9,7 +9,7 @@ orbs:
 executors:
   base:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/python:stable
 
 jobs:
   theme-song:
