@@ -83,5 +83,5 @@ workflows:
     when: << pipeline.parameters.gamma-quadrant-neutral-zone >>
     jobs:
       - the_stand_in:
-          name: "a purely technological world"
+          name: "We're losing the peace"
           quadrant: "gamma"
