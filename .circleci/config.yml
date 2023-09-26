@@ -28,15 +28,22 @@ jobs:
       - run:
           name: Setup Stand In Workflows
           command: |
+            if [[ -s "<< parameters.json_file >>" ]]; then
+              echo "The JSON file is not empty"
+            else
+              echo "The JSON file is empty, adding {}"
+              echo "{}" > "<< parameters.json_file >>"
+            fi
+
             check_and_add_parameter() {
               local file="$1"
               local param_to_check="$2"
-              new_param="$3"
+              local new_param="$3"
 
               # Check if the parameter exists in the JSON file
               if ! jq -e ".${param_to_check}" "$file" > /dev/null; then
                 # Add the new parameter to the JSON file
-                jq --arg "${new_param}" "true" '. + {"${new_param}": "true"}' > "$file"
+                jq --arg "${new_param}" "true" '. + {"${new_param}": "true"}' > tmp.json && mv tmp.json "$file"
                 echo "Running stand in workflow, added new parameter: $new_param"
               else
                 echo "No need to run stand in workflow, parameter $param_to_check already exists"
