@@ -1,0 +1,17 @@
+version: 2.1
+
+setup: true
+
+orbs:
+  path-filtering: circleci/path-filtering@1.0.0
+
+workflows:
+  setup-workflow:
+    jobs:
+      - path-filtering/filter:
+          name: check path
+          mapping: |
+            alpha_quadrant/.* alpha-quadrant true
+            delta_quadrant/.* delta-quadrant true
+            gamma_quadrant/.* gamma-quadrant true
+          config-path: .circleci/continued_config.yml

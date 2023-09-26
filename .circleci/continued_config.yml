@@ -1,0 +1,48 @@
+version: 2.1
+
+parameters:
+  alpha-quadrant:
+    type: boolean
+    default: false
+  delta-quadrant:
+    type: boolean
+    default: false
+  gamma-quadrant:
+    type: boolean
+    default: false
+
+executors:
+  base:
+    docker:
+      - image: cimg/base:stable
+
+jobs:
+  the_job:
+    executor: base
+    parameters:
+      file_path:
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - run: cat << parameters.file_path >>
+
+workflows:
+  alpha-quadrant:
+    when: << pipeline.parameters.alpha-quadrant >>
+    jobs:
+      - the_job:
+          name: "We have engaged the borg"
+          file_path: alpha_quadrant/wolf_359
+  delta-quadrant:
+    when: << pipeline.parameters.delta-quadrant >>
+    jobs:
+      - the_job:
+          name: "a purely technological world"
+          file_path: delta_quadrant/unicomplex
+  gamma-quadrant:
+    when: << pipeline.parameters.gamma-quadrant >>
+    jobs:
+      - the_job:
+          name: "We're losing the peace"
+          file_path: gamma_quadrant/dominion
