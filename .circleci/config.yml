@@ -36,7 +36,7 @@ jobs:
               # Check if the parameter exists in the JSON file
               if ! jq -e ".${param_to_check}" "$file" > /dev/null; then
                 # Add the new parameter to the JSON file
-                jq --arg $new_param "true" '. + {($new_param): "true"}' > tmp.json && mv tmp.json "$file"
+                jq --stream-errors --arg "$(new_param)" "true" '. + {($new_param): "true"}' > tmp.json && mv tmp.json "$file"
                 echo "Running stand in workflow, added new parameter: $new_param"
               else
                 echo "No need to run stand in workflow, parameter $param_to_check already exists"
