@@ -4,10 +4,19 @@ parameters:
   alpha-quadrant:
     type: boolean
     default: false
+  alpha-quadrant-neutral-zone:
+    type: boolean
+    default: false
   delta-quadrant:
     type: boolean
     default: false
+  delta-quadrant-neutral-zone:
+    type: boolean
+    default: false
   gamma-quadrant:
+    type: boolean
+    default: false
+  gamma-quadrant-neutral-zone:
     type: boolean
     default: false
 
@@ -26,6 +35,18 @@ jobs:
     steps:
       - checkout
       - run: cat << parameters.file_path >>
+  the_stand_in:
+    executor: base
+    parameters:
+      quadrant:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Stand in for << parameters.quadrant >> workflow
+          command: |
+            echo "Stand in for << parameters.quadrant >> quadrant workflow \n
+             marking complete for github checks"
 
 workflows:
   alpha-quadrant:
@@ -34,15 +55,33 @@ workflows:
       - the_job:
           name: "We have engaged the borg"
           file_path: alpha_quadrant/wolf_359
+  alpha-quadrant-stand-in:
+    when: << pipeline.parameters.alpha-quadrant-neutral-zone >>
+    jobs:
+      - the_stand_in:
+          name: "We have engaged the borg"
+          quadrant: "alpha"
   delta-quadrant:
     when: << pipeline.parameters.delta-quadrant >>
     jobs:
       - the_job:
           name: "a purely technological world"
           file_path: delta_quadrant/unicomplex
+  delta-quadrant-stand-in:
+    when: << pipeline.parameters.delta-quadrant-neutral-zone >>
+    jobs:
+      - the_stand_in:
+          name: "a purely technological world"
+          quadrant: "delta"
   gamma-quadrant:
     when: << pipeline.parameters.gamma-quadrant >>
     jobs:
       - the_job:
           name: "We're losing the peace"
           file_path: gamma_quadrant/dominion
+  gamma-quadrant-stand-in:
+    when: << pipeline.parameters.gamma-quadrant-neutral-zone >>
+    jobs:
+      - the_stand_in:
+          name: "a purely technological world"
+          quadrant: "gamma"
