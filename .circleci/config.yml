@@ -36,16 +36,16 @@ jobs:
               # Check if the parameter exists in the JSON file
               if ! jq -e ".${param_to_check}" "$file" > /dev/null; then
                 # Add the new parameter to the JSON file
-                jq --arg new_param "$new_param" '. + {($new_param): "true"}' "$file" > tmp.json && mv tmp.json "$file"
+                jq --arg $new_param "true" '. + {($new_param): "true"}' > tmp.json && mv tmp.json "$file"
                 echo "Running stand in workflow, added new parameter: $new_param"
               else
                 echo "No need to run stand in workflow, parameter $param_to_check already exists"
               fi
             }
 
-            check_and_add_parameter "$json_file" "alpha-quadrant" "alpha-quadrant-neutral-zone"
-            check_and_add_parameter "$json_file" "delta-quadrant" "delta-quadrant-neutral-zone"
-            check_and_add_parameter "$json_file" "gamma-quadrant" "gamma-quadrant-neutral-zone"
+            check_and_add_parameter "<< parameters.json_file >>" "alpha-quadrant" "alpha-quadrant-neutral-zone"
+            check_and_add_parameter "<< parameters.json_file >>" "delta-quadrant" "delta-quadrant-neutral-zone"
+            check_and_add_parameter "<< parameters.json_file >>" "gamma-quadrant" "gamma-quadrant-neutral-zone"
 
       - continuation/continue:
           parameters: << parameters.json_file >>
