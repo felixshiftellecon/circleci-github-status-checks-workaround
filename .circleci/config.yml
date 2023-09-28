@@ -12,7 +12,7 @@ executors:
       - image: cimg/python:3.8
 
 jobs:
-  theme-song:
+  setup-job:
     executor: base
     parameters:
       json_file:
@@ -22,9 +22,9 @@ jobs:
       - checkout
       - path-filtering/set-parameters:
           mapping: |
-            alpha_quadrant/.* alpha-quadrant true
-            delta_quadrant/.* delta-quadrant true
-            gamma_quadrant/.* gamma-quadrant true
+            alpha_quadrant/.* alpha true
+            delta_quadrant/.* delta true
+            gamma_quadrant/.* gamma true
           output-path: << parameters.json_file >>
       - run:
           name: Setup Stand In Workflows
@@ -51,9 +51,9 @@ jobs:
               fi
             }
 
-            check_and_add_parameter << parameters.json_file >> "alpha-quadrant" "alpha-quadrant-neutral-zone"
-            check_and_add_parameter << parameters.json_file >> "delta-quadrant" "delta-quadrant-neutral-zone"
-            check_and_add_parameter << parameters.json_file >> "gamma-quadrant" "gamma-quadrant-neutral-zone"
+            check_and_add_parameter << parameters.json_file >> "alpha" "alpha-stand-in"
+            check_and_add_parameter << parameters.json_file >> "delta" "delta-stand-in"
+            check_and_add_parameter << parameters.json_file >> "gamma" "gamma-stand-in"
 
       - continuation/continue:
           parameters: << parameters.json_file >>
@@ -62,7 +62,7 @@ jobs:
     
 
 workflows:
-  intro-credits:
+  setup-workflow:
     jobs:
-      - theme-song:
+      - setup-job:
           name: intro credits

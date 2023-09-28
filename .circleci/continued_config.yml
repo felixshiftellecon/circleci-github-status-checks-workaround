@@ -1,22 +1,22 @@
 version: 2.1
 
 parameters:
-  alpha-quadrant:
+  alpha:
     type: boolean
     default: false
-  alpha-quadrant-neutral-zone:
+  alpha-stand-in:
     type: boolean
     default: false
-  delta-quadrant:
+  delta:
     type: boolean
     default: false
-  delta-quadrant-neutral-zone:
+  delta-stand-in:
     type: boolean
     default: false
-  gamma-quadrant:
+  gamma:
     type: boolean
     default: false
-  gamma-quadrant-neutral-zone:
+  gamma-stand-in:
     type: boolean
     default: false
 
@@ -50,38 +50,86 @@ jobs:
 
 workflows:
   alpha-quadrant:
-    when: << pipeline.parameters.alpha-quadrant >>
+    when: << pipeline.parameters.alpha >>
     jobs:
       - the_job:
-          name: "We have engaged the borg"
+          name: "Setup"
           file_path: alpha_quadrant/wolf_359
-  alpha-quadrant-stand-in:
-    when: << pipeline.parameters.alpha-quadrant-neutral-zone >>
+      - the_job:
+          name: "Unit Tests"
+          file_path: alpha_quadrant/wolf_359
+          requires:
+            - "Setup"
+      - the_job:
+          name: "Integration Tests"
+          file_path: alpha_quadrant/wolf_359
+          requires:
+            - "Setup"
+      - the_job:
+          name: "Alpha Workflow Complete"
+          file_path: alpha_quadrant/wolf_359
+          requires:
+            - "Unit Tests"
+            - "Integration Tests"
+  stand-in-alpha-quadrant:
+    when: << pipeline.parameters.alpha-stand-in >>
     jobs:
       - the_stand_in:
-          name: "We have engaged the borg"
+          name: "Alpha Workflow Complete"
           quadrant: "alpha"
   delta-quadrant:
-    when: << pipeline.parameters.delta-quadrant >>
+    when: << pipeline.parameters.delta >>
     jobs:
       - the_job:
-          name: "a purely technological world"
+          name: "Setup"
           file_path: delta_quadrant/unicomplex
-  delta-quadrant-stand-in:
-    when: << pipeline.parameters.delta-quadrant-neutral-zone >>
+      - the_job:
+          name: "Unit Tests"
+          file_path: delta_quadrant/unicomplex
+          requires:
+            - "Setup"
+      - the_job:
+          name: "Integration Tests"
+          file_path: delta_quadrant/unicomplex
+          requires:
+            - "Setup"
+      - the_job:
+          name: "Delta Workflow Complete"
+          file_path: delta_quadrant/unicomplex
+          requires:
+            - "Unit Tests"
+            - "Integration Tests"
+  stand-in-delta-quadrant:
+    when: << pipeline.parameters.delta-stand-in >>
     jobs:
       - the_stand_in:
-          name: "a purely technological world"
+          name: "Delta Workflow Complete"
           quadrant: "delta"
   gamma-quadrant:
-    when: << pipeline.parameters.gamma-quadrant >>
+    when: << pipeline.parameters.gamma >>
     jobs:
       - the_job:
-          name: "We're losing the peace"
+          name: "Setup"
           file_path: gamma_quadrant/dominion
-  gamma-quadrant-stand-in:
-    when: << pipeline.parameters.gamma-quadrant-neutral-zone >>
+      - the_job:
+          name: "Unit Tests"
+          file_path: gamma_quadrant/dominion
+          requires:
+            - "Setup"
+      - the_job:
+          name: "Integration Tests"
+          file_path: gamma_quadrant/dominion
+          requires:
+            - "Setup"
+      - the_job:
+          name: "Gamma Workflow Complete"
+          file_path: gamma_quadrant/dominion
+          requires:
+            - "Unit Tests"
+            - "Integration Tests"
+  stand-in-gamma-quadrant:
+    when: << pipeline.parameters.gamma-stand-in >>
     jobs:
       - the_stand_in:
-          name: "We're losing the peace"
+          name: "Gamma Workflow Complete"
           quadrant: "gamma"
