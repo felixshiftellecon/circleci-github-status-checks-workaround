@@ -11,7 +11,7 @@ workflows:
       - path-filtering/filter:
           name: check path
           mapping: |
-            alpha_quadrant/.* alpha-quadrant true
-            delta_quadrant/.* delta-quadrant true
-            gamma_quadrant/.* gamma-quadrant true
+            alpha_quadrant/.* alpha true
+            delta_quadrant/.* delta true
+            gamma_quadrant/.* gamma true
           config-path: .circleci/continued_config.yml

@@ -1,13 +1,13 @@
 version: 2.1
 
 parameters:
-  alpha-quadrant:
+  alpha:
     type: boolean
     default: false
-  delta-quadrant:
+  delta:
     type: boolean
     default: false
-  gamma-quadrant:
+  gamma:
     type: boolean
     default: false
 
@@ -15,6 +15,7 @@ executors:
   base:
     docker:
       - image: cimg/base:stable
+    resource_class: small
 
 jobs:
   the_job:
@@ -26,23 +27,81 @@ jobs:
     steps:
       - checkout
       - run: cat << parameters.file_path >>
+  finished:
+    executor: base
+    parameters:
+      quadrant:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: "Completed << parameters.quadrant >> workflow"
+          command: echo "The << parameters.quadrant >> workflow has completed successfully"
 
 workflows:
   alpha-quadrant:
-    when: << pipeline.parameters.alpha-quadrant >>
+    when: << pipeline.parameters.alpha >>
     jobs:
       - the_job:
-          name: "We have engaged the borg"
+          name: "Alpha Setup"
           file_path: alpha_quadrant/wolf_359
+      - the_job:
+          name: "Alpha Unit Tests"
+          file_path: alpha_quadrant/wolf_359
+          requires:
+            - "Alpha Setup"
+      - the_job:
+          name: "Alpha Integration Tests"
+          file_path: alpha_quadrant/wolf_359
+          requires:
+            - "Alpha Setup"
+      - finished:
+          name: "Alpha Workflow Complete"
+          quadrant: "alpha"
+          requires:
+            - "Alpha Unit Tests"
+            - "Alpha Integration Tests"
   delta-quadrant:
-    when: << pipeline.parameters.delta-quadrant >>
+    when: << pipeline.parameters.delta >>
     jobs:
       - the_job:
-          name: "a purely technological world"
+          name: "Delta Setup"
           file_path: delta_quadrant/unicomplex
+      - the_job:
+          name: "Delta Unit Tests"
+          file_path: delta_quadrant/unicomplex
+          requires:
+            - "Delta Setup"
+      - the_job:
+          name: "Delta Integration Tests"
+          file_path: delta_quadrant/unicomplex
+          requires:
+            - "Delta Setup"
+      - finished:
+          name: "Delta Workflow Complete"
+          quadrant: "delta"
+          requires:
+            - "Delta Unit Tests"
+            - "Delta Integration Tests"
   gamma-quadrant:
-    when: << pipeline.parameters.gamma-quadrant >>
+    when: << pipeline.parameters.gamma >>
     jobs:
       - the_job:
-          name: "We're losing the peace"
+          name: "Gamma Setup"
           file_path: gamma_quadrant/dominion
+      - the_job:
+          name: "Gamma Unit Tests"
+          file_path: gamma_quadrant/dominion
+          requires:
+            - "Gamma Setup"
+      - the_job:
+          name: "Gamma Integration Tests"
+          file_path: gamma_quadrant/dominion
+          requires:
+            - "Gamma Setup"
+      - finished:
+          name: "Gamma Workflow Complete"
+          quadrant: "gamma"
+          requires:
+            - "Gamma Unit Tests"
+            - "Gamma Integration Tests"
