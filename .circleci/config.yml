@@ -10,7 +10,7 @@ executors:
   base:
     docker:
       - image: cimg/python:3.8
-      resource_class: small
+    resource_class: small
 
 jobs:
   setup-job:
