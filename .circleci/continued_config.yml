@@ -36,6 +36,16 @@ jobs:
     steps:
       - checkout
       - run: cat << parameters.file_path >>
+  finished:
+    executor: base
+    parameters:
+      quadrant:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: "Completed << parameters.quadrant >> workflow"
+          command: echo "The << parameters.quadrant >> workflow has completed successfully"
   the_stand_in:
     executor: base
     parameters:
@@ -66,9 +76,9 @@ workflows:
           file_path: alpha_quadrant/wolf_359
           requires:
             - "Alpha Setup"
-      - the_job:
+      - finished:
           name: "Alpha Workflow Complete"
-          file_path: alpha_quadrant/wolf_359
+          quadrant: "alpha"
           requires:
             - "Alpha Unit Tests"
             - "Alpha Integration Tests"
@@ -78,6 +88,8 @@ workflows:
       - the_stand_in:
           name: "Alpha Workflow Complete"
           quadrant: "alpha"
+          requires:
+            - "Alpha Setup"
   delta-quadrant:
     when: << pipeline.parameters.delta >>
     jobs:
@@ -94,9 +106,9 @@ workflows:
           file_path: delta_quadrant/unicomplex
           requires:
             - "Delta Setup"
-      - the_job:
+      - finished:
           name: "Delta Workflow Complete"
-          file_path: delta_quadrant/unicomplex
+          quadrant: "delta"
           requires:
             - "Delta Unit Tests"
             - "Delta Integration Tests"
@@ -106,6 +118,8 @@ workflows:
       - the_stand_in:
           name: "Delta Workflow Complete"
           quadrant: "delta"
+          requires:
+            - "Delta Setup"
   gamma-quadrant:
     when: << pipeline.parameters.gamma >>
     jobs:
@@ -122,9 +136,9 @@ workflows:
           file_path: gamma_quadrant/dominion
           requires:
             - "Gamma Setup"
-      - the_job:
+      - finished:
           name: "Gamma Workflow Complete"
-          file_path: gamma_quadrant/dominion
+          quadrant: "gamma"
           requires:
             - "Gamma Unit Tests"
             - "Gamma Integration Tests"
