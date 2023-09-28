@@ -88,8 +88,6 @@ workflows:
       - the_stand_in:
           name: "Alpha Workflow Complete"
           quadrant: "alpha"
-          requires:
-            - "Alpha Setup"
   delta-quadrant:
     when: << pipeline.parameters.delta >>
     jobs:
@@ -118,8 +116,6 @@ workflows:
       - the_stand_in:
           name: "Delta Workflow Complete"
           quadrant: "delta"
-          requires:
-            - "Delta Setup"
   gamma-quadrant:
     when: << pipeline.parameters.gamma >>
     jobs:
