@@ -54,24 +54,24 @@ workflows:
     when: << pipeline.parameters.alpha >>
     jobs:
       - the_job:
-          name: "Setup"
+          name: "Alpha Setup"
           file_path: alpha_quadrant/wolf_359
       - the_job:
-          name: "Unit Tests"
+          name: "Alpha Unit Tests"
           file_path: alpha_quadrant/wolf_359
           requires:
-            - "Setup"
+            - "Alpha Setup"
       - the_job:
-          name: "Integration Tests"
+          name: "Alpha Integration Tests"
           file_path: alpha_quadrant/wolf_359
           requires:
-            - "Setup"
+            - "Alpha Setup"
       - the_job:
           name: "Alpha Workflow Complete"
           file_path: alpha_quadrant/wolf_359
           requires:
-            - "Unit Tests"
-            - "Integration Tests"
+            - "Alpha Unit Tests"
+            - "Alpha Integration Tests"
   stand-in-alpha-quadrant:
     when: << pipeline.parameters.alpha-stand-in >>
     jobs:
@@ -82,24 +82,24 @@ workflows:
     when: << pipeline.parameters.delta >>
     jobs:
       - the_job:
-          name: "Setup"
+          name: "Delta Setup"
           file_path: delta_quadrant/unicomplex
       - the_job:
-          name: "Unit Tests"
+          name: "Delta Unit Tests"
           file_path: delta_quadrant/unicomplex
           requires:
-            - "Setup"
+            - "Delta Setup"
       - the_job:
-          name: "Integration Tests"
+          name: "Delta Integration Tests"
           file_path: delta_quadrant/unicomplex
           requires:
-            - "Setup"
+            - "Delta Setup"
       - the_job:
           name: "Delta Workflow Complete"
           file_path: delta_quadrant/unicomplex
           requires:
-            - "Unit Tests"
-            - "Integration Tests"
+            - "Delta Unit Tests"
+            - "Delta Integration Tests"
   stand-in-delta-quadrant:
     when: << pipeline.parameters.delta-stand-in >>
     jobs:
@@ -110,24 +110,24 @@ workflows:
     when: << pipeline.parameters.gamma >>
     jobs:
       - the_job:
-          name: "Setup"
+          name: "Gamma Setup"
           file_path: gamma_quadrant/dominion
       - the_job:
-          name: "Unit Tests"
+          name: "Gamma Unit Tests"
           file_path: gamma_quadrant/dominion
           requires:
-            - "Setup"
+            - "Gamma Setup"
       - the_job:
-          name: "Integration Tests"
+          name: "Gamma Integration Tests"
           file_path: gamma_quadrant/dominion
           requires:
-            - "Setup"
+            - "Gamma Setup"
       - the_job:
           name: "Gamma Workflow Complete"
           file_path: gamma_quadrant/dominion
           requires:
-            - "Unit Tests"
-            - "Integration Tests"
+            - "Gamma Unit Tests"
+            - "Gamma Integration Tests"
   stand-in-gamma-quadrant:
     when: << pipeline.parameters.gamma-stand-in >>
     jobs:
