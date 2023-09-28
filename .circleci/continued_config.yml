@@ -4,10 +4,19 @@ parameters:
   alpha:
     type: boolean
     default: false
+  alpha-stand-in:
+    type: boolean
+    default: false
   delta:
     type: boolean
     default: false
+  delta-stand-in:
+    type: boolean
+    default: false
   gamma:
+    type: boolean
+    default: false
+  gamma-stand-in:
     type: boolean
     default: false
 
@@ -37,6 +46,18 @@ jobs:
       - run:
           name: "Completed << parameters.quadrant >> workflow"
           command: echo "The << parameters.quadrant >> workflow has completed successfully"
+  the_stand_in:
+    executor: base
+    parameters:
+      quadrant:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Stand in for << parameters.quadrant >> workflow
+          command: |
+            echo "Stand in for << parameters.quadrant >> quadrant workflow \n
+             marking complete for github checks"
 
 workflows:
   alpha-quadrant:
@@ -61,6 +82,12 @@ workflows:
           requires:
             - "Alpha Unit Tests"
             - "Alpha Integration Tests"
+  stand-in-alpha-quadrant:
+    when: << pipeline.parameters.alpha-stand-in >>
+    jobs:
+      - the_stand_in:
+          name: "Alpha Workflow Complete"
+          quadrant: "alpha"
   delta-quadrant:
     when: << pipeline.parameters.delta >>
     jobs:
@@ -83,6 +110,12 @@ workflows:
           requires:
             - "Delta Unit Tests"
             - "Delta Integration Tests"
+  stand-in-delta-quadrant:
+    when: << pipeline.parameters.delta-stand-in >>
+    jobs:
+      - the_stand_in:
+          name: "Delta Workflow Complete"
+          quadrant: "delta"
   gamma-quadrant:
     when: << pipeline.parameters.gamma >>
     jobs:
@@ -105,3 +138,9 @@ workflows:
           requires:
             - "Gamma Unit Tests"
             - "Gamma Integration Tests"
+  stand-in-gamma-quadrant:
+    when: << pipeline.parameters.gamma-stand-in >>
+    jobs:
+      - the_stand_in:
+          name: "Gamma Workflow Complete"
+          quadrant: "gamma"

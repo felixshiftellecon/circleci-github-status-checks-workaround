@@ -4,14 +4,66 @@ setup: true
 
 orbs:
   path-filtering: circleci/path-filtering@1.0.0
+  continuation: circleci/continuation@1.0.0
 
-workflows:
-  setup-workflow:
-    jobs:
-      - path-filtering/filter:
-          name: check path
+executors:
+  base:
+    docker:
+      - image: cimg/python:3.8
+    resource_class: small
+
+jobs:
+  setup-job:
+    executor: base
+    parameters:
+      json_file:
+        type: string
+        default: "temp-parameters.json"
+    steps:
+      - checkout
+      - path-filtering/set-parameters:
           mapping: |
             alpha_quadrant/.* alpha true
             delta_quadrant/.* delta true
             gamma_quadrant/.* gamma true
-          config-path: .circleci/continued_config.yml
+          output-path: << parameters.json_file >>
+      - run:
+          name: Setup Stand In Workflows
+          command: |
+            if [[ -s << parameters.json_file >> ]]; then
+              echo "The JSON file is not empty"
+            else
+              echo "The JSON file is empty, adding {}"
+              echo "{}" > << parameters.json_file >>
+            fi
+
+            check_and_add_parameter() {
+              local file="$1"
+              local param_to_check="$2"
+              local new_param="$3"
+
+              # Check if the parameter exists in the JSON file
+              if ! jq -e ".[\"$param_to_check\"]" "$file" > /dev/null; then
+                # Add the new parameter to the JSON file
+                jq --arg new_param "$new_param" '. + {($new_param): true}' "$file" > tmp.json && mv tmp.json "$file"
+                echo "Running stand in workflow, added new parameter: $new_param"
+              else
+                echo "No need to run stand in workflow, parameter $param_to_check already exists"
+              fi
+            }
+
+            check_and_add_parameter << parameters.json_file >> "alpha" "alpha-stand-in"
+            check_and_add_parameter << parameters.json_file >> "delta" "delta-stand-in"
+            check_and_add_parameter << parameters.json_file >> "gamma" "gamma-stand-in"
+
+      - continuation/continue:
+          parameters: << parameters.json_file >>
+          configuration_path: .circleci/continued_config.yml
+
+    
+
+workflows:
+  setup-workflow:
+    jobs:
+      - setup-job:
+          name: intro credits
