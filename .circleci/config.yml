@@ -6,7 +6,7 @@ orbs:
   path-filtering: circleci/path-filtering@1.0.0
 
 workflows:
-  intro-credits:
+  setup-workflow:
     jobs:
       - path-filtering/filter:
           name: check path
