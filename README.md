@@ -22,6 +22,7 @@ This can be simplified further by having a single job at the end of each workflo
 
 - Easy to implement
 - Prevents human error by being fully automated
+- Stand-in job can use a smaller resource class than the normal jobs
 - Stand-in workflow and job make it clear what is happening in both the UI and the CircleCI config
 - Setup config can be locked down with [config policies](https://circleci.com/docs/config-policy-management-overview/)
 
