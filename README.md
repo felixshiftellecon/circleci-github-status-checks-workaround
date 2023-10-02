@@ -44,7 +44,6 @@ Merging into the main branch requires the following status checks:
 ---
 
 <br>
-<br>
 
 ### Setup Workflow
 
@@ -55,11 +54,9 @@ A [script is run after](https://github.com/felixshiftellecon/circleci-github-sta
 The [downstream workflows are then triggered](https://github.com/felixshiftellecon/circleci-github-status-checks-workaround/blob/main/.circleci/config.yml#L59).
 
 <br>
-<br>
 
 ---
 
-<br>
 <br>
 
 ### Files Changed Workflows
@@ -77,7 +74,6 @@ When files are changed within the directories, any parameters that were set to `
 
 ---
 
-<br>
 <br>
 
 ### No Changes Workflows
