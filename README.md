@@ -32,9 +32,21 @@ This can be simplified further by having a single job at the end of each workflo
 
 ## Demo
 
+### Branch Protection Settings
+
 Merging into the main branch requires the following status checks:
 
 <img width="726" alt="Screenshot 2023-10-02 at 10 26 48 AM" src="https://github.com/felixshiftellecon/circleci-github-status-checks-workaround/assets/57482070/7574c745-3fe0-4199-a7e1-7d466f43115c">
+
+<br>
+<br>
+
+---
+
+<br>
+<br>
+
+### Setup Workflow
 
 The CircleCI config uses the [path filtering orb to set parameters](https://github.com/felixshiftellecon/circleci-github-status-checks-workaround/blob/main/.circleci/config.yml#L24) to `true` if a change is made to any file within one of the three directories present. There is one parameter per directory.
 
@@ -49,6 +61,8 @@ The [downstream workflows are then triggered](https://github.com/felixshiftellec
 
 <br>
 <br>
+
+### Files Changed Workflows
 
 When files are changed within the directories, any parameters that were set to `true` [run their normal workflows](https://github.com/felixshiftellecon/circleci-github-status-checks-workaround/blob/main/.circleci/continued_config.yml#L64) and the checks are satisfied. Below is a pull request showing a file being changed in each of the three directories, triggering their normal workflows and satisfying the checks.
 
@@ -65,6 +79,8 @@ When files are changed within the directories, any parameters that were set to `
 
 <br>
 <br>
+
+### No Changes Workflows
 
 Any parameters that were _not_ set to `true` have a stand-in parameter set to `true` which [triggers a stand-in workflow](https://github.com/felixshiftellecon/circleci-github-status-checks-workaround/blob/main/.circleci/continued_config.yml#L86). The stand-in workflow contains a job with the same name as the required check, which satisfies it. Below is a pull request showing no files being changed, triggering stand-in workflows to satisfy the checks.
 
